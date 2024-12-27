@@ -52,7 +52,7 @@ export class EmpHomeComponent implements OnInit {
             pt = 200;
           }
 
-          const totalSalary = grossSalary - pt;
+          const totalSalary = employee.basicSalary + dearnessAllowance + conveyanceAllowance + houseRentAllowance - pt;
 
           // Return the employee data with the calculated values
           return {
@@ -60,7 +60,6 @@ export class EmpHomeComponent implements OnInit {
             dearnessAllowance,
             conveyanceAllowance,
             houseRentAllowance,
-            grossSalary,
             pt,
             totalSalary
           };
@@ -90,21 +89,22 @@ export class EmpHomeComponent implements OnInit {
         };
 
         // Call the service to update the employee
-        
+
         this.employeeService.updateEmployee(updatedEmployee).subscribe({
           next: (response) => {
             console.log('Employee updated successfully:', response);
             this.getEmployeeList();  // get the employee list
-            this.employeeForm.reset(); // Reset the form
+            this.resetForm(); // Reset the form
           },
           error: (error) => {
             console.error('Error updating employee:', error);
+            this.resetForm();
           }
         });
 
       }
     }
-    
+
     if (this.employeeForm.valid) {
       const formValues = this.employeeForm.value;
       const backendEmployee = {
@@ -117,17 +117,17 @@ export class EmpHomeComponent implements OnInit {
         basicSalary: formValues.basicSalary
       };
 
-      // Send data to the backend
+      // Add New Employee to DB.
       this.employeeService.addEmployee(backendEmployee).subscribe({
         next: async (response) => {
           console.log('Employee added successfully:', response);
           this.getEmployeeList();
-          this.employeeForm.reset();
+          this.resetForm();
         },
         error: (error) => {
           console.error('Error adding employee:', error);
           this.getEmployeeList();
-          this.employeeForm.reset();
+          this.resetForm();
         }
       });
     } else {
@@ -136,7 +136,7 @@ export class EmpHomeComponent implements OnInit {
   }
 
   editEmployee(employee: any): void {
-    
+
     this.isEditMode = true;
     this.selectedEmployee = employee;
     this.employeeForm.patchValue({
@@ -148,5 +148,11 @@ export class EmpHomeComponent implements OnInit {
       designation: employee.designation,
       basicSalary: employee.basicSalary
     });
+  }
+
+  resetForm(): void {
+    this.employeeForm.reset();
+    this.isEditMode = false;
+    this.selectedEmployee = null;
   }
 }
