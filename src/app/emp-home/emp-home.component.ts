@@ -74,7 +74,7 @@ export class EmpHomeComponent implements OnInit {
 
   onSubmit(): void {
 
-    if (this.isEditMode === true) {
+    if (this.isEditMode === true) { //edit the employee
       if (this.employeeForm.valid) {
         const formValues = this.employeeForm.value;
 
