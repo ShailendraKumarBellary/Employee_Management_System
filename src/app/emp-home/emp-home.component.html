@@ -1,0 +1,149 @@
+<div>
+    <h2 class="text-center">{{ employeeHeader }}</h2>
+</div>
+<div class="container my-4">
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="p-4 border rounded shadow-sm bg-light">
+        <h3 class="text-center mb-4">Employee Details</h3>
+        <div class="row g-3">
+
+            <!-- Employee Code -->
+            <div class="col-md-6">
+                <label for="employeeCode" class="form-label">Employee Code:</label>
+                <input id="employeeCode" formControlName="employeeCode" class="form-control"
+                    placeholder="Enter Employee Code eg: 001" />
+                <div class="text-danger"
+                    *ngIf="employeeForm.controls['employeeCode'].invalid && employeeForm.controls['employeeCode'].touched">
+                    <small *ngIf="employeeForm.controls['employeeCode'].hasError('required')">Employee Code is
+                        required.</small>
+                </div>
+            </div>
+
+            <!-- Employee Name -->
+            <div class="col-md-6">
+                <label for="employeeName" class="form-label">Employee Name:</label>
+                <input id="employeeName" formControlName="employeeName" class="form-control"
+                    placeholder="Enter Employee Name" />
+                <div class="text-danger"
+                    *ngIf="employeeForm.controls['employeeName'].invalid && employeeForm.controls['employeeName'].touched">
+                    <small *ngIf="employeeForm.controls['employeeName'].hasError('required')">Employee Name is
+                        required.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date of Birth and Gender -->
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <label for="dateOfBirth" class="form-label">Date of Birth:</label>
+                <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control" />
+                <div class="text-danger"
+                    *ngIf="employeeForm.controls['dateOfBirth'].invalid && employeeForm.controls['dateOfBirth'].touched">
+                    <small *ngIf="employeeForm.controls['dateOfBirth'].hasError('required')">Date of Birth is
+                        required.</small>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="gender" class="form-label">Gender:</label>
+                <select id="gender" formControlName="gender" class="form-select">
+                    <option value="" disabled>Select Gender</option>
+                    <option value="true">Male</option>
+                    <option value="false">Female</option>
+                </select>
+                <div class="text-danger"
+                    *ngIf="employeeForm.controls['gender'].invalid && employeeForm.controls['gender'].touched">
+                    <small *ngIf="employeeForm.controls['gender'].hasError('required')">Gender is required.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department and Designation -->
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <label for="department" class="form-label">Department:</label>
+                <input id="department" formControlName="department" class="form-control"
+                    placeholder="Enter Department" />
+                <div class="text-danger"
+                    *ngIf="employeeForm.controls['department'].invalid && employeeForm.controls['department'].touched">
+                    <small *ngIf="employeeForm.controls['department'].hasError('required')">Department is
+                        required.</small>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label for="designation" class="form-label">Designation:</label>
+                <input id="designation" formControlName="designation" class="form-control"
+                    placeholder="Enter Designation" />
+                <div class="text-danger"
+                    *ngIf="employeeForm.controls['designation'].invalid && employeeForm.controls['designation'].touched">
+                    <small *ngIf="employeeForm.controls['designation'].hasError('required')">Designation is
+                        required.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Basic Salary -->
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <label for="basicSalary" class="form-label">Basic Salary:</label>
+                <input id="basicSalary" formControlName="basicSalary" type="number" class="form-control"
+                    placeholder="Enter Basic Salary (e.g., 10000)" />
+                <div class="text-danger"
+                    *ngIf="employeeForm.controls['basicSalary'].invalid && employeeForm.controls['basicSalary'].touched">
+                    <small *ngIf="employeeForm.controls['basicSalary'].hasError('required')">Basic Salary is
+                        required.</small>
+                    <small *ngIf="employeeForm.controls['basicSalary'].hasError('min')">Basic Salary must be greater
+                        than 0.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center mt-4">
+            <button type="submit" [disabled]="employeeForm.invalid" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+<!-- Table-View -->
+<div class="container my-4">
+    <h2 class="text-center">Employee Records</h2>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Employee Code</th>
+                <th>Employee Name</th>
+                <th>Date of Birth</th>
+                <th>Gender</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Basic Salary</th>
+                <th>Dearness Allowance</th>
+                <th>Conveyance Allowance</th>
+                <th>House Rent Allowance</th>
+                <th>PT</th>
+                <th>Total Salary</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let employee of getEmployeeData">
+                <td>{{ employee.employeeCode }}</td>
+                <td>{{ employee.employeeName }}</td>
+                <td>{{ employee.dateOfBirth }}</td>
+                <td>{{ employee.gender ? 'Male' : 'Female' }}</td>
+                <td>{{ employee.department }}</td>
+                <td>{{ employee.designation }}</td>
+                <td>{{ employee.basicSalary | currency }}</td>
+                <td>{{ employee.dearnessAllowance | currency }}</td>
+                <td>{{ employee.conveyanceAllowance | currency }}</td>
+                <td>{{ employee.houseRentAllowance | currency }}</td>
+                <td>{{ employee.pt | currency }}</td>
+                <td>{{ employee.totalSalary | currency }}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" (click)="editEmployee(employee)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
